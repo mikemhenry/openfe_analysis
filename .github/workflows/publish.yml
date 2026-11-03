@@ -124,7 +124,8 @@ jobs:
         working-directory: /tmp
         run: |
           # Run tests
-          python -m pytest --import-mode=importlib -v --color=yes --durations=10 $GITHUB_WORKSPACE/src/openfe_analysis/tests/
+          # Use append mode to test the installed wheel instead of importing the source package, which lacks the generated _version.py.
+          python -m pytest --import-mode=append -v --color=yes --durations=10 $GITHUB_WORKSPACE/src/openfe_analysis/tests/
 
   publish:
     name: Publish to PyPI
