@@ -6,23 +6,26 @@ import pooch
 import pytest
 from rdkit import Chem
 
-ZENODO_DOI = "doi:10.5281/zenodo.20442933"
-
-ZENODO_FILES = {
-    "openfe_analysis_full.tar.gz": "md5:a51b1f8d98b91ab1a69a6f55508d07db",
-    "openfe_analysis_skipped.tar.gz": "md5:ac42219bde9da3641375adf3a9ddffbf",
-    "openfe_analysis_septop.tar.gz": "md5:8977d86cdbc05767a2e82760bdf9006f",
+DATA_FILES = {
+    "openfe_analysis_full.tar.gz": "sha256:cd54a67a12318249de327bb46df3074ba028e98734543c6d335135e3e2695f24",
+    "openfe_analysis_skipped.tar.gz": "sha256:b19ef80a55e35a8442143cb4cf6b3fa80c6bbf84c5a7547f359360e2690af984",
+    "openfe_analysis_septop.tar.gz": "sha256:366efd207ba56045ef4f814989de20debe70e11a182a0d4d1fabaaa171f89cdc",
 }
 
-POOCH_CACHE = pathlib.Path(pooch.os_cache("openfe_analysis"))
-POOCH_CACHE.mkdir(parents=True, exist_ok=True)
+DATA_URLS = {
+    filename: (
+        f"https://data.openfe.org/v1/"
+        f"{digest.removeprefix('sha256:')}/{filename}"
+    )
+    for filename, digest in DATA_FILES.items()
+}
 
-ZENODO_RBFE_DATA = pooch.create(
+RBFE_DATA = pooch.create(
     path=POOCH_CACHE,
-    base_url=ZENODO_DOI,
-    registry=ZENODO_FILES,
+    base_url="",
+    registry=DATA_FILES,
+    urls=DATA_URLS,
 )
-
 
 def _fetch_and_untar(dirname: str) -> pathlib.Path:
     ZENODO_RBFE_DATA.fetch(f"{dirname}.tar.gz", processor=pooch.Untar())
