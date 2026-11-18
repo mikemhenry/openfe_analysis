@@ -1,14 +1,14 @@
 """Upload content-addressed CI data to Cloudflare R2 via Wrangler OAuth.
 
 Usage (from a Pixi task):
-    pixi run --locked upload-data path/to/archive.tar.gz
+    pixi run --locked -e r2-upload upload-data path/to/file.tar.gz
 
 Prerequisites:
     - project-local Wrangler declared in package.json/package-lock.json
     - nodejs and Python managed by Pixi
     - `wrangler login` completed for the user (one time):
 
-    pixi run --locked npm exec -- wrangler login
+    pixi run --locked -e r2-upload login-r2
 """
 
 import argparse
