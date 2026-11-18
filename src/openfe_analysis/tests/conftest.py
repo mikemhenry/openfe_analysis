@@ -12,6 +12,8 @@ DATA_FILES = {
     "openfe_analysis_septop.tar.gz": "sha256:366efd207ba56045ef4f814989de20debe70e11a182a0d4d1fabaaa171f89cdc",
 }
 
+POOCH_CACHE = pathlib.Path(pooch.os_cache("openfe_analysis"))
+POOCH_CACHE.mkdir(parents=True, exist_ok=True)
 DATA_URLS = {
     filename: (
         f"https://data.openfe.org/v1/"
@@ -28,7 +30,7 @@ RBFE_DATA = pooch.create(
 )
 
 def _fetch_and_untar(dirname: str) -> pathlib.Path:
-    ZENODO_RBFE_DATA.fetch(f"{dirname}.tar.gz", processor=pooch.Untar())
+    RBFE_DATA.fetch(f"{dirname}.tar.gz", processor=pooch.Untar())
     cached_dir = pathlib.Path(f"{POOCH_CACHE}/{dirname}.tar.gz.untar/{dirname}")
     return cached_dir
 
