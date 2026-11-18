@@ -1,5 +1,6 @@
 import pathlib
 from importlib import resources
+import fcntl
 
 import numpy as np
 import pooch
@@ -30,10 +31,17 @@ RBFE_DATA = pooch.create(
 )
 
 def _fetch_and_untar(dirname: str) -> pathlib.Path:
-    RBFE_DATA.fetch(f"{dirname}.tar.gz", processor=pooch.Untar())
-    cached_dir = pathlib.Path(f"{POOCH_CACHE}/{dirname}.tar.gz.untar/{dirname}")
-    return cached_dir
+    archive = f"{dirname}.tar.gz"
+    cached_dir = POOCH_CACHE / f"{archive}.untar" / dirname
 
+    # Prevent concurrent pytest-xdist workers from downloading/extracting the same archive.
+    lock_path = POOCH_CACHE / f"{archive}.lock"
+
+    with lock_path.open("a+b") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        RBFE_DATA.fetch(archive, processor=pooch.Untar())
+
+    return cached_dir
 
 @pytest.fixture(scope="session")
 def rbfe_output_data_dir() -> pathlib.Path:
