@@ -8,7 +8,7 @@ import pytest
 from rdkit import Chem
 
 DATA_FILES = {
-    "openfe_analysis_simulation_output.tar.gz": "sha256:cd54a67a12318249de327bb46df3074ba028e98734543c6d335135e3e2695f24",
+    "openfe_analysis_full.tar.gz": "sha256:cd54a67a12318249de327bb46df3074ba028e98734543c6d335135e3e2695f24",
     "openfe_analysis_skipped.tar.gz": "sha256:b19ef80a55e35a8442143cb4cf6b3fa80c6bbf84c5a7547f359360e2690af984",
     "openfe_analysis_septop.tar.gz": "sha256:366efd207ba56045ef4f814989de20debe70e11a182a0d4d1fabaaa171f89cdc",
 }
@@ -45,7 +45,7 @@ def _fetch_and_untar(dirname: str) -> pathlib.Path:
 
 @pytest.fixture(scope="session")
 def rbfe_output_data_dir() -> pathlib.Path:
-    cached_dir = _fetch_and_untar("openfe_analysis_simulation_output")
+    cached_dir = _fetch_and_untar("openfe_analysis_full")
     return cached_dir
 
 
